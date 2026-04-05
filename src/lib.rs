@@ -33,8 +33,6 @@ impl<T> QuickSort<T> for &mut [T] {
 
         self.swap(i, pivot);
 
-        // fast_sort(&mut self[..i], compare);
-        // fast_sort(&mut self[i + 1..], compare);
         (&mut self[..i]).fast_sort(compare);
         (&mut self[i + 1..]).fast_sort(compare);
     }
