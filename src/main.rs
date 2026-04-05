@@ -33,7 +33,7 @@ fn app() {
         break numbers;
     };
 
-    numbers.as_mut_slice().fast_sort(&|n1, n2| n1 < n2);
+    numbers.fast_sort(&|n1, n2| n1 < n2);
 
     let numbers = numbers
         .into_iter()

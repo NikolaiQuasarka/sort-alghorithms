@@ -6,12 +6,11 @@ pub trait QuickSort<T> {
     }
 }
 
-impl<T> QuickSort<T> for &mut [T] {
+impl<T> QuickSort<T> for [T] {
     fn fast_sort<F>(&mut self, compare: &F)
     where
         F: Fn(&T, &T) -> bool,
     {
-        // fast_sort_impl(slice, &compare);
         if self.len() <= 1 {
             return;
         }
@@ -33,8 +32,8 @@ impl<T> QuickSort<T> for &mut [T] {
 
         self.swap(i, pivot);
 
-        (&mut self[..i]).fast_sort(compare);
-        (&mut self[i + 1..]).fast_sort(compare);
+        self[..i].fast_sort(compare);
+        self[i + 1..].fast_sort(compare);
     }
 }
 
@@ -49,7 +48,7 @@ mod tests {
     #[test]
     fn numbers_sort() {
         let mut numbers = vec![3, 5, 76, 87, 54, 4];
-        numbers.as_mut_slice().fast_sort(&numbers_compare);
+        numbers.fast_sort(&numbers_compare);
 
         assert_eq!(vec![3, 4, 5, 54, 76, 87], numbers)
     }
@@ -63,7 +62,7 @@ mod tests {
 
         // list.iter().for_each(|el| println!("{}", el));
 
-        list.as_mut_slice().fast_sort(&numbers_compare);
+        list.fast_sort(&numbers_compare);
 
         // list.iter().for_each(|el| println!("{}", el));
     }
@@ -84,7 +83,7 @@ mod tests {
 
         list.iter().for_each(|el| println!("{}", el));
 
-        list.as_mut_slice().fast_sort(&numbers_compare);
+        list.fast_sort(&numbers_compare);
 
         list.iter().for_each(|el| println!("{}", el));
     }
