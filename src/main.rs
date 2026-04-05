@@ -20,7 +20,7 @@ fn app() {
 
         let numbers = match numbers
             .split_whitespace()
-            .map(|n| n.parse::<u64>())
+            .map(|n| n.parse::<f64>())
             .collect::<Result<Vec<_>, _>>()
         {
             Ok(numbers) => numbers,
