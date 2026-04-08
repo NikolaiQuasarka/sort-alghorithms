@@ -1,16 +1,9 @@
-pub trait QuickSort<T> {
-    fn fast_sort<F>(&mut self, _compare: &F)
-    where
-        F: Fn(&T, &T) -> bool,
-    {
-    }
+pub trait QuickSort<T: PartialOrd> {
+    fn fast_sort(&mut self) {}
 }
 
-impl<T> QuickSort<T> for [T] {
-    fn fast_sort<F>(&mut self, compare: &F)
-    where
-        F: Fn(&T, &T) -> bool,
-    {
+impl<T: PartialOrd> QuickSort<T> for [T] {
+    fn fast_sort(&mut self) {
         if self.len() <= 1 {
             return;
         }
@@ -23,7 +16,7 @@ impl<T> QuickSort<T> for [T] {
         let mut j = 0;
 
         while j < pivot {
-            if compare(&self[j], &self[pivot]) {
+            if &self[j] < &self[pivot] {
                 self.swap(i, j);
                 i += 1;
             }
@@ -32,8 +25,8 @@ impl<T> QuickSort<T> for [T] {
 
         self.swap(i, pivot);
 
-        self[..i].fast_sort(compare);
-        self[i + 1..].fast_sort(compare);
+        self[..i].fast_sort();
+        self[i + 1..].fast_sort();
     }
 }
 
@@ -42,13 +35,13 @@ mod tests {
     use super::*;
     use rand::prelude::*;
 
-    fn numbers_compare(n1: &u64, n2: &u64) -> bool {
-        n1 < n2
-    }
+    // fn numbers_compare(n1: &u64, n2: &u64) -> bool {
+    //     n1 < n2
+    // }
     #[test]
     fn numbers_sort() {
         let mut numbers = vec![3, 5, 76, 87, 54, 4];
-        numbers.fast_sort(&numbers_compare);
+        numbers.fast_sort();
 
         assert_eq!(vec![3, 4, 5, 54, 76, 87], numbers)
     }
@@ -56,15 +49,24 @@ mod tests {
     #[test]
     fn large_list_sort() {
         let mut rng = rand::rng();
-        let mut list = (0..99_999_999u64).collect::<Vec<u64>>();
+        let mut list = (0..999_999u64).collect::<Vec<u64>>();
 
         list.shuffle(&mut rng);
 
         // list.iter().for_each(|el| println!("{}", el));
 
-        list.fast_sort(&numbers_compare);
+        list.fast_sort();
 
         // list.iter().for_each(|el| println!("{}", el));
+    }
+
+    #[test]
+    fn reserved_list() {
+        let mut list = (0..999_999).rev().collect::<Vec<u64>>();
+
+        list.fast_sort();
+
+        assert_eq!((0..999_999).collect::<Vec<_>>(), list)
     }
 
     #[test]
@@ -83,7 +85,7 @@ mod tests {
 
         list.iter().for_each(|el| println!("{}", el));
 
-        list.fast_sort(&numbers_compare);
+        list.fast_sort();
 
         list.iter().for_each(|el| println!("{}", el));
     }

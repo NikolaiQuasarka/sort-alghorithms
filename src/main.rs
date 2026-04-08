@@ -33,7 +33,7 @@ fn app() {
         break numbers;
     };
 
-    numbers.fast_sort(&|n1, n2| n1 < n2);
+    numbers.fast_sort();
 
     let numbers = numbers
         .into_iter()
