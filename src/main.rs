@@ -18,19 +18,30 @@ fn app() {
             continue;
         }
 
-        let numbers = match numbers
+        let (numbers, errors): (Vec<_>, Vec<_>) = numbers
             .split_whitespace()
-            .map(|n| n.parse::<f64>())
-            .collect::<Result<Vec<_>, _>>()
-        {
-            Ok(numbers) => numbers,
-            Err(err) => {
-                eprintln!("Ошибка: {}\nВведите числа еще раз:", err);
-                continue;
-            }
+            .enumerate()
+            .map(|(i, n)| n.parse::<f64>().or(Err((i, n))))
+            .partition(|n| n.is_ok());
+
+        if !errors.is_empty() {
+            let wrong_numbers = errors
+                .iter()
+                .map(|number| {
+                    let (index, number) = number.expect_err("Значение прошло парсинг");
+
+                    format!("\nПозиция: {index} - {number}")
+                })
+                .collect::<String>();
+
+            eprintln!("Ошибка:{}\nВведите числа еще раз:", wrong_numbers);
+            continue;
         };
 
-        break numbers;
+        break numbers
+            .into_iter()
+            .collect::<Result<Vec<_>, _>>()
+            .expect("Значение не прошло парсинг");
     };
 
     numbers.fast_sort();
